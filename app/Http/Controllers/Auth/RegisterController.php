@@ -8,9 +8,22 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\UniqueUserNameRequest;
+use Illuminate\Http\Response;
+use Illuminate\Http\Request;
+use App\Interfaces\UserRepositoryInterface;
+
 
 class RegisterController extends Controller
 {
+
+    private UserRepositoryInterface $userRepository;
+
+    public function __construct(UserRepositoryInterface $userRepository) 
+    {
+        $this->userRepository = $userRepository;
+        $this->middleware('guest');
+    }
     /*
     |--------------------------------------------------------------------------
     | Register Controller
@@ -32,42 +45,22 @@ class RegisterController extends Controller
     protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('guest');
-    }
-
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-    }
-
-    /**
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
      * @return \App\Models\User
      */
-    protected function create(array $data)
+    protected function register(UniqueUserNameRequest $request)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        
+        $validated = $request->validated();
+        $validated['password'] = Hash::make($validated['password']);
+        $create_user = $this->userRepository->createUser($validated);
+        if (isset($create_user)) {
+            return redirect('/login')->with('successRegister', 'Registered Successfully! Now Please Login');
+         }
+         else{
+            return back()->with('failure', 'Opps! Failed to Register, Please Try Again');
+         } 
     }
 }

@@ -53,7 +53,7 @@ class LoginController extends Controller
 
         if ($this->userRepository->AuthenticateUser($request->email, $request->password)) {
            return view('todos.index', ['success' => 'You have Successfully LoggedIn!']);
-        }
+        }else
         return back()->with('failure', 'Opps! You have entered invalid credentials');
     }
 

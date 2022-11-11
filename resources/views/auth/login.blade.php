@@ -13,6 +13,11 @@
                         {{ session('failure') }}
                     </div>
                 @endif
+                @if (session('successRegister'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session('successRegister') }}
+                    </div>
+                @endif
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
                         <div class="row mb-3">
