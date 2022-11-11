@@ -2,8 +2,9 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\OrderRepositoryInterface;
+use App\Interfaces\UserRepositoryInterface;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserRepository implements UserRepositoryInterface 
 {
@@ -22,6 +23,13 @@ class UserRepository implements UserRepositoryInterface
         return User::where('name', $userName)->firstOrFail();
     }
 
+    public function AuthenticateUser($email, $password){
+        if (Hash::check($password, User::select('password')->where('email',$email)->first()->password)) {
+            return true;
+         } else {
+           return false;
+         }
+    }
     public function deleteUser($userId) 
     {
         User::destroy($userId);

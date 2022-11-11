@@ -5,9 +5,19 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use App\Interfaces\UserRepositoryInterface;
 
 class LoginController extends Controller
 {
+
+    private UserRepositoryInterface $userRepository;
+
+    public function __construct(UserRepositoryInterface $userRepository) 
+    {
+        $this->userRepository = $userRepository;
+        $this->middleware('guest')->except('logout');
+    }
     /*
     |--------------------------------------------------------------------------
     | Login Controller
@@ -33,8 +43,18 @@ class LoginController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('guest')->except('logout');
+    
+
+    public function login(Request $request){
+        $request->validate([
+            'email' => 'required',
+            'password' => 'required',
+        ]);
+
+        if ($this->userRepository->AuthenticateUser($request->email, $request->password)) {
+           return view('todos.index', ['success' => 'You have Successfully LoggedIn!']);
+        }
+        return back()->with('failure', 'Opps! You have entered invalid credentials');
     }
+
 }

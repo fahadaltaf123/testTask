@@ -8,9 +8,13 @@
                 <div class="card-header">{{ __('Login') }}</div>
 
                 <div class="card-body">
+                @if (session('failure'))
+                    <div class="alert alert-danger" role="alert">
+                        {{ session('failure') }}
+                    </div>
+                @endif
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
-
                         <div class="row mb-3">
                             <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
 
