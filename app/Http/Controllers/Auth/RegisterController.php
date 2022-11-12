@@ -23,6 +23,7 @@ class RegisterController extends Controller
     {
         $this->userRepository = $userRepository;
         $this->middleware('guest');
+        $this->middleware('user.log');
     }
     /*
     |--------------------------------------------------------------------------
