@@ -12,46 +12,34 @@
   </head>
   <body>
 
-  <div class="container-fluid text-center">
+  <div class="container-fluid text-center pt-5 pb-5">
+    @if (session('success'))
+        <div class="alert alert-success" role="alert">
+            {{ session('success') }}
+        </div>
+    @endif
     <h3>Todos List</h3>
 
     <table class="table mt-5">
       <thead>
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">First</th>
-          <th scope="col">Last</th>
-          <th scope="col">Handle</th>
-        </tr>
+          <th scope="col">Id</th>
+          <th scope="col">Title</th>
+          <th scope="col">Status</th>
+        </tr> 
       </thead>
       <tbody>
+        @for($i = 0; $i < count($todosList); $i++)
         <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
+          <th scope="row">{{$todosList[$i]->id}}</th>
+          <td>{{$todosList[$i]->title}}</td>
+          <td>{{ $todosList[$i]->completed ? 'Completed' : 'Not Completed' }}</td>
         </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td colspan="2">Larry the Bird</td>
-          <td>@twitter</td>
-        </tr>
+        @endfor
       </tbody>
     </table>
 
   </div>
-
-    @if (isset($success))
-        <div class="alert alert-success" role="alert">
-            {{ $success }}
-        </div>
-    @endif
     
     
 

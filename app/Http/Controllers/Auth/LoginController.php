@@ -7,6 +7,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Interfaces\UserRepositoryInterface;
+use Illuminate\Support\Facades\Http;
 
 class LoginController extends Controller
 {
@@ -52,9 +53,11 @@ class LoginController extends Controller
         ]);
 
         if ($this->userRepository->AuthenticateUser($request->email, $request->password)) {
-           return view('todos.index', ['success' => 'You have Successfully LoggedIn!']);
+           return redirect()->route('todos')->with('success', 'You have Successfully LoggedIn!');
         }else
         return back()->with('failure', 'Opps! You have entered invalid credentials');
     }
+
+
 
 }

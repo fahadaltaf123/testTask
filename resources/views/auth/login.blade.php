@@ -18,6 +18,11 @@
                         {{ session('successRegister') }}
                     </div>
                 @endif
+                @if (session('message'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session('message') }}
+                    </div>
+                @endif
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
                         <div class="row mb-3">
