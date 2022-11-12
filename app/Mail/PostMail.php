@@ -13,14 +13,16 @@ class PostMail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $post;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($post)
     {
-        //
+        $this->post = $post;
     }
 
     /**
@@ -33,6 +35,24 @@ class PostMail extends Mailable
         return new Envelope(
             subject: 'Post Mail',
         );
+    }
+
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
+    public function build()
+    {
+        //return $this->view('mails.post_mail');
+        return $this->from('muhammadhassanjutt786@gmail.com')
+                    ->view('mails.post_mail')
+                    ->text('mails.post_mail_plain')
+                    ->with(
+                      [
+                            'title' => 'Post Demo',
+                            'body' => 'Testing Demo Post'
+                      ]);
     }
 
     /**
