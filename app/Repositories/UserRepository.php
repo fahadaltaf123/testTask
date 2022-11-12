@@ -24,11 +24,17 @@ class UserRepository implements UserRepositoryInterface
     }
 
     public function AuthenticateUser($email, $password){
-        if (Hash::check($password, User::select('password')->where('email',$email)->first()->password)) {
-            return true;
-         } else {
-           return false;
-         }
+        if(isset($email) && isset($password)){
+            $pwd = User::select('password')->where('email',$email)->first();
+            if(isset($pwd)){
+                if (Hash::check($password, $pwd->password)) {
+                    return true;
+                 } else {
+                   return false;
+                 }
+            }
+        }
+        
     }
     public function deleteUser($userId) 
     {
