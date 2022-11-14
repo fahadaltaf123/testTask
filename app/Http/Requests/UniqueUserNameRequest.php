@@ -24,7 +24,7 @@ class UniqueUserNameRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:users|string|max:255',
+            'name' => 'required|string|max:255',
             'email' => 'required|unique:users|email|string|max:255',
             'password' => 'required|string|confirmed|min:8'
         ];

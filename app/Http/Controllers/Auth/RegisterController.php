@@ -51,17 +51,26 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
+
+    protected function uniqueUserName(string $name){
+        $usercheck = User::where('name', '=', $name)->first();
+        return $usercheck === null ? true : false;
+    }
+
     protected function register(UniqueUserNameRequest $request)
     {
-        
         $validated = $request->validated();
         $validated['password'] = Hash::make($validated['password']);
-        $create_user = $this->userRepository->createUser($validated);
-        if (isset($create_user)) {
-            return redirect('/login')->with('successRegister', 'Registered Successfully! Now Please Login');
-         }
-         else{
-            return back()->with('failure', 'Opps! Failed to Register, Please Try Again');
-         } 
+        if($this->uniqueUserName($validated['name'])){
+            $create_user = $this->userRepository->createUser($validated);
+            if (isset($create_user)) {
+                return redirect('/login')->with('successRegister', 'Registered Successfully! Now Please Login');
+            }
+            else{
+                return back()->with('failure', 'Opps! Failed to Register, Please Try Again');
+            }
+        }else{
+            return back()->with('failure', 'Username already exists! Try with other!');
+        }
     }
 }
